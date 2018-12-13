@@ -1,0 +1,186 @@
+#Version 0.2
+import:
+	org.bukkit.Bukkit
+	org.bukkit.boss.BossBar
+	org.bukkit.boss.BarColor
+	org.bukkit.boss.BarStyle
+	org.bukkit.boss.BarFlag
+expression:
+	patterns:
+		[skbossbarapi] [a] [new] [boss[ ]]bar
+	get:
+		return Bukkit.createBossBar("",BarColor.PURPLE!,BarStyle.SOLID!)
+expression:
+	patterns:
+		[skbossbarapi] (title|header|text|string|name) of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] (title|header|text|string|name)
+	return type: string
+	get:
+		expression 1 is instance of BossBar
+		return expression 1.getTitle()
+	set string:
+		expression 1 is instance of BossBar
+		expression 1.setTitle(change value)
+expression:
+	patterns:
+		[skbossbarapi] colo[u]r of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] colo[u]r
+	return type: string
+	get:
+		expression 1 is instance of BossBar
+		return expression 1.getColor().toString() in lower case
+	set string:
+		expression 1 is instance of BossBar
+		change value is "blue":
+			expression 1.setColor(BarColor.BLUE!)
+			stop
+		change value is "green":
+			expression 1.setColor(BarColor.GREEN!)
+			stop
+		change value is "pink":
+			expression 1.setColor(BarColor.PINK!)
+			stop
+		change value is "purple":
+			expression 1.setColor(BarColor.PURPLE!)
+			stop
+		change value is "red":
+			expression 1.setColor(BarColor.RED!)
+			stop
+		change value is "white":
+			expression 1.setColor(BarColor.WHITE!)
+			stop
+		change value is "yellow":
+			expression 1.setColor(BarColor.YELLOW!)
+expression:
+	patterns:
+		[skbossbarapi] style of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] style
+	return type: string
+	get:
+		expression 1 is instance of BossBar
+		return expression 1.getStyle().toString().replace("_"," ") in lower case
+	set string:
+		expression 1 is instance of BossBar
+		change value is "segmented 6", "segmented_6", "6 segmented" or "6_segmented":
+			expression 1.setStyle(BarStyle.SEGMENTED_6!)
+			stop
+		change value is "segmented 10", "segmented_10", "10 segmented" or "10_segmented":
+			expression 1.setStyle(BarStyle.SEGMENTED_10!)
+			stop
+		change value is "segmented 12", "segmented_12", "12 segmented" or "12_segmented":
+			expression 1.setStyle(BarStyle.SEGMENTED_12!)
+			stop
+		change value is "segmented 20", "segmented_20", "20 segmented" or "20_segmented":
+			expression 1.setStyle(BarStyle.SEGMENTED_20!)
+			stop
+		change value is "solid":
+			expression 1.setStyle(BarStyle.SOLID!)
+expression:
+	patterns:
+		[skbossbarapi] progress of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] progress
+	return type: number
+	get:
+		expression 1 is instance of BossBar
+		return expression 1.getProgress()*100
+	set number:
+		expression 1 is instance of BossBar
+		expression 1.setProgress(change value/100)
+expression:
+	patterns:
+		[skbossbarapi] players of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] players
+	return type: players
+	get:
+		expression 1 is instance of BossBar
+		return ...expression 1.getPlayers()
+	add players:
+		expression 1 is instance of BossBar
+		loop change values:
+			expression 1.addPlayer(loop-value)
+	remove players:
+		expression 1 is instance of BossBar
+		loop change values:
+			expression 1.removePlayer(loop-value)
+	reset:
+		expression 1 is instance of BossBar
+		expression 1.removeAll()
+expression:
+	patterns:
+		[skbossbarapi] flags of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] flags
+	return type: string
+	add string:
+		expression 1 is instance of BossBar
+		loop change values:
+			loop-value is "create fog" or "create_fog":
+				expression 1.addFlag(BarFlag.CREATE_FOG!)
+			loop-value is "darken sky" or "darken_sky":
+				expression 1.addFlag(BarFlag.DARKEN_SKY!)
+			loop-value is "play boss music" or "play_boss_music":
+				expression 1.addFlag(BarFlag.PLAY_BOSS_MUSIC!)
+	remove string:
+		expression 1 is instance of BossBar
+		loop change values:
+			loop-value is "create fog" or "create_fog":
+				expression 1.removeFlag(BarFlag.CREATE_FOG!)
+			loop-value is "darken sky" or "darken_sky":
+				expression 1.removeFlag(BarFlag.DARKEN_SKY!)
+			loop-value is "play boss music" or "play_boss_music":
+				expression 1.removeFlag(BarFlag.PLAY_BOSS_MUSIC!)
+condition:
+	patterns:
+		[skbossbarapi] [boss[ ]]bar %object% has flag[s] %strings%
+		[skbossbarapi] [boss[ ]]bar %object% does( not|n't) have flag[s] %strings%
+	check:
+		matched pattern is 1:
+			loop expressions 2:
+				loop-value is "create fog" or "create_fog":
+					expression 1.hasFlag(BarFlag.CREATE_FOG!) is false
+					stop
+				else if loop-value is "darken sky" or "darken_sky":
+					expression 1.hasFlag(BarFlag.DARKEN_SKY!) is false
+					stop
+				else if loop-value is "play boss music" or "play_boss_music":
+					expression 1.hasFlag(BarFlag.PLAY_BOSS_MUSIC!) is false
+					stop
+				else:
+					stop
+			continue
+		else:
+			loop expressions 2:
+				loop-value is "create fog" or "create_fog":
+					expression 1.hasFlag(BarFlag.CREATE_FOG!)
+					stop
+				else if loop-value is "darken sky" or "darken_sky":
+					expression 1.hasFlag(BarFlag.DARKEN_SKY!)
+					stop
+				else if loop-value is "play boss music" or "play_boss_music":
+					expression 1.hasFlag(BarFlag.PLAY_BOSS_MUSIC!)
+					stop
+			continue
+expression:
+	patterns:
+		[skbossbarapi] visib(ility|le state) of [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object%'[s] visib(ility|le state)
+	return type: boolean
+	get:
+		expression 1 is instance of BossBar
+		return expression 1.isVisible()
+	set boolean:
+		expression 1 is instance of BossBar
+		expression 1.setVisible(change value)
+condition:
+	patterns:
+		[skbossbarapi] [boss[ ]]bar %object% is visible [to players]
+		[skbossbarapi] players can see [boss[ ]]bar %object%
+		[skbossbarapi] [boss[ ]]bar %object% is( not|'t) visible [to players]
+		[skbossbarapi] players can( not|'t) see [boss[ ]]bar %object%
+	check:
+		expression 1 is instance of BossBar
+		matched pattern is 1 or 2:
+			expression 1.isVisible()
+			continue
+		else:
+			expression 1.isVisible() is false
+			continue
