@@ -1,4 +1,4 @@
-#Version 0.2
+#Version 0.3
 import:
 	org.bukkit.Bukkit
 	org.bukkit.boss.BossBar
@@ -86,11 +86,12 @@ expression:
 	set number:
 		expression 1 is instance of BossBar
 		expression 1.setProgress(change value/100)
-expression:
+plural expression:
 	patterns:
 		[skbossbarapi] players of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] players
 	return type: players
+	loop of: player
 	get:
 		expression 1 is instance of BossBar
 		return ...expression 1.getPlayers()
@@ -105,11 +106,12 @@ expression:
 	reset:
 		expression 1 is instance of BossBar
 		expression 1.removeAll()
-expression:
+plural expression:
 	patterns:
 		[skbossbarapi] flags of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] flags
 	return type: string
+	loop of: flag
 	add string:
 		expression 1 is instance of BossBar
 		loop change values:
@@ -128,6 +130,15 @@ expression:
 				expression 1.removeFlag(BarFlag.DARKEN_SKY!)
 			loop-value is "play boss music" or "play_boss_music":
 				expression 1.removeFlag(BarFlag.PLAY_BOSS_MUSIC!)
+	get:
+		expression 1 is instance of BossBar
+		expression 1.hasFlag(BarFlag.CREATE_FOG!):
+			add "create fog" to {_return::*}
+		expression 1.hasFlag(BarFlag.DARKEN_SKY!):
+			add "darken sky" to {_return::*}
+		expression 1.hasFlag(BarFlag.PLAY_BOSS_MUSIC!):
+			add "play boss music" to {_return::*}
+		return {_return::*}
 condition:
 	patterns:
 		[skbossbarapi] [boss[ ]]bar %object% has flag[s] %strings%
