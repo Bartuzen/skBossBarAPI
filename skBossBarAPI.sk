@@ -1,10 +1,12 @@
-#Version 0.3
+#Version 0.4
 import:
 	org.bukkit.Bukkit
 	org.bukkit.boss.BossBar
 	org.bukkit.boss.BarColor
 	org.bukkit.boss.BarStyle
 	org.bukkit.boss.BarFlag
+	ch.njol.skript.Skript
+	ch.njol.skript.lang.Variable
 expression:
 	patterns:
 		[skbossbarapi] [a] [new] [boss[ ]]bar
@@ -15,9 +17,15 @@ expression:
 		[skbossbarapi] (title|header|text|string|name) of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] (title|header|text|string|name)
 	return type: string
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	get:
-		expression 1 is instance of BossBar
-		return expression 1.getTitle()
+		expression 1 is instance of BossBar:
+			return expression 1.getTitle()
+		return
 	set string:
 		expression 1 is instance of BossBar
 		expression 1.setTitle(change value)
@@ -26,9 +34,15 @@ expression:
 		[skbossbarapi] colo[u]r of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] colo[u]r
 	return type: string
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	get:
-		expression 1 is instance of BossBar
-		return expression 1.getColor().toString() in lower case
+		expression 1 is instance of BossBar:
+			return expression 1.getColor().toString() in lower case
+		return
 	set string:
 		expression 1 is instance of BossBar
 		change value is "blue":
@@ -56,9 +70,15 @@ expression:
 		[skbossbarapi] style of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] style
 	return type: string
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	get:
-		expression 1 is instance of BossBar
-		return expression 1.getStyle().toString().replace("_"," ") in lower case
+		expression 1 is instance of BossBar:
+			return expression 1.getStyle().toString().replace("_"," ") in lower case
+		return
 	set string:
 		expression 1 is instance of BossBar
 		change value is "segmented 6", "segmented_6", "6 segmented" or "6_segmented":
@@ -80,9 +100,15 @@ expression:
 		[skbossbarapi] progress of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] progress
 	return type: number
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	get:
-		expression 1 is instance of BossBar
-		return expression 1.getProgress()*100
+		expression 1 is instance of BossBar:
+			return expression 1.getProgress()*100
+		return
 	set number:
 		expression 1 is instance of BossBar
 		expression 1.setProgress(change value/100)
@@ -92,9 +118,15 @@ plural expression:
 		[skbossbarapi] [boss[ ]]bar %object%'[s] players
 	return type: players
 	loop of: player
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	get:
-		expression 1 is instance of BossBar
-		return ...expression 1.getPlayers()
+		expression 1 is instance of BossBar:
+			return ...expression 1.getPlayers()
+		return
 	add players:
 		expression 1 is instance of BossBar
 		loop change values:
@@ -112,6 +144,11 @@ plural expression:
 		[skbossbarapi] [boss[ ]]bar %object%'[s] flags
 	return type: string
 	loop of: flag
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	add string:
 		expression 1 is instance of BossBar
 		loop change values:
@@ -143,6 +180,11 @@ condition:
 	patterns:
 		[skbossbarapi] [boss[ ]]bar %object% has flag[s] %strings%
 		[skbossbarapi] [boss[ ]]bar %object% does( not|n't) have flag[s] %strings%
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	check:
 		matched pattern is 1:
 			loop expressions 2:
@@ -175,9 +217,15 @@ expression:
 		[skbossbarapi] visib(ility|le state) of [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object%'[s] visib(ility|le state)
 	return type: boolean
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	get:
-		expression 1 is instance of BossBar
-		return expression 1.isVisible()
+		expression 1 is instance of BossBar:
+			return expression 1.isVisible()
+		return
 	set boolean:
 		expression 1 is instance of BossBar
 		expression 1.setVisible(change value)
@@ -187,6 +235,11 @@ condition:
 		[skbossbarapi] players can see [boss[ ]]bar %object%
 		[skbossbarapi] [boss[ ]]bar %object% is( not|'t) visible [to players]
 		[skbossbarapi] players can( not|'t) see [boss[ ]]bar %object%
+	parse:
+		expression 1 isn't instance of Variable:
+			Skript.error("%expression 1% is not a variable.")
+			stop
+		continue
 	check:
 		expression 1 is instance of BossBar
 		matched pattern is 1 or 2:
